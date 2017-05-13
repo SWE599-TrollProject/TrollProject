@@ -6,7 +6,7 @@ app = Flask('troll_tespit',
             template_folder='templates', static_folder='static')
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return 'Hello World!'
 
