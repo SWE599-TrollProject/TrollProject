@@ -13,7 +13,6 @@ class Evaluator(object):
         self.bot_rate = config.getfloat('RATES', 'bot_rate')
         self.user = None
         self.tline = None
-        self.tline_with_replies = None
 
     def evaluate(self, screen_name):
         try:
@@ -23,8 +22,8 @@ class Evaluator(object):
             return 404, {'error': {'message': ex.message}}
 
         try:
-            self.tline = self.api.GetUserTimeline(screen_name=screen_name, exclude_replies=True)
-            self.tline_with_replies = self.api.GetUserTimeline(screen_name=screen_name)
+            self.tline = [t.AsDict() for t in self.api.GetUserTimeline(
+                screen_name=screen_name, count=100)]
 
             if len(self.tline) == 0:
                 return 200, {
@@ -34,10 +33,11 @@ class Evaluator(object):
             return 404, {'error': {'message': ex.message}}
 
         def get_tweet_props(prop):
-            return [t.AsDict()[prop] for t in self.tline]
+            return [t[prop] for t in self.tline]
 
         try:
-            toxic_level = self.toxic_level(get_tweet_props('text'))
+            msg_for_toxicity = " ".join(get_tweet_props('text'))
+            toxic_level = self.toxic_level(msg_for_toxicity[:2800])
             bot_level = self.bot_level()
             inactivity_level = self.inactivity_level()
         except Exception as ex:
@@ -47,8 +47,8 @@ class Evaluator(object):
             'result': {
                 'bot_level': bot_level,
                 'inactive_level': inactivity_level,
-                'toxic_level': toxic_level,
-                'account_basic': self.user.AsDict()
+                'troll_level': toxic_level,
+                # 'account_basic': self.user.AsDict()
             }
         }
 
@@ -56,38 +56,63 @@ class Evaluator(object):
     def get_date(x):
         return datetime.strptime(x['created_at'], '%a %b %d %H:%M:%S +0000 %Y')
 
-    def toxic_level(self, msgs):
-        def get_toxicity(msg):
-            tx = self.perspective.get_toxicity(msg)
-            return tx['attributeScores']['TOXICITY']['summaryScore']['value']
-
-        return sum(get_toxicity(msg) for msg in msgs) / len(msgs)
+    def toxic_level(self, msg):
+        tx = self.perspective.get_toxicity(msg)
+        return {k: v['summaryScore']['value'] for k,v in tx['attributeScores'].items()}
 
     def bot_level(self):
         # calculate retweet speed
         rt_deltas = []
-        for t in self.tline:
-            tweet = t.AsDict()
+        t_deltas = []
+        last_tweet_time = None
+        for tweet in self.tline:
+            t_time = self.get_date(tweet)
             if 'retweeted_status' in tweet:
                 rt_time = self.get_date(tweet['retweeted_status'])
-                t_time = self.get_date(tweet)
                 rt_deltas.append(abs((rt_time - t_time).seconds))
+            if last_tweet_time:
+                t_deltas.append(abs((last_tweet_time - t_time).seconds))
+                last_tweet_time = t_time
+            else:
+                last_tweet_time = t_time
 
+        shortest_rt, grouped_rtd = 0, []
+        shortest_t, grouped_td = 0, []
         if len(rt_deltas) > 0:
-            avg_rt_deltas = sum(rt_deltas) / len(rt_deltas)
-            return avg_rt_deltas
-        else:
-            return 0
+            sorted_rtd = sorted(rt_deltas)
+            shortest_rt = sorted_rtd[0]
+            grouped_rtd = list(set(sorted_rtd))
+
+        if len(t_deltas) > 0:
+            sorted_td = sorted(t_deltas)
+            shortest_t = sorted_td[-1]
+            grouped_td = list(set(sorted_td))
+
+        is_bot_suspect = False
+        if len(grouped_td) > 0:
+            if 0.9 >= len(grouped_td) / len(sorted_td) >= 0.1:
+                is_bot_suspect = True
+        if len(grouped_rtd) > 0:
+            if 0.9 >= len(grouped_rtd) / len(sorted_rtd) >= 0.1:
+                is_bot_suspect = True
+
+        return {
+            'is_bot_suspect': is_bot_suspect,
+            'shortest_rt': shortest_rt,
+            'shortest_t': shortest_t
+        }
 
     def inactivity_level(self):
         # check the frequency of messages
-        last_msg = self.tline[0].AsDict()
-        first_msg = self.tline[-1].AsDict()
+        last_msg = self.tline[0]
+        first_msg = self.tline[-1]
 
         last_tweet_date = self.get_date(last_msg)
         first_tweet_date = self.get_date(first_msg)
         last_first_diff = abs((last_tweet_date - first_tweet_date).days)
         today_last_diff = abs((datetime.today() - last_tweet_date).days)
+        if last_first_diff == 0:
+            last_first_diff = 1
         active_time_avg = len(self.tline) / last_first_diff
 
         if active_time_avg > self.inactive_rate and today_last_diff < self.inactivity_tolerance:
