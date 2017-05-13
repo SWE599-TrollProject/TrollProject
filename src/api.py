@@ -37,9 +37,9 @@ class PerspectiveAPI(object):
                 # 'ATTACK_ON_COMMENTER': {},
                 # 'INCOHERENT': {},
                 # 'INFLAMMATORY': {},
-                # 'OBSCENE': {},
+                'OBSCENE': {},
                 # 'OFF_TOPIC': {},
-                # 'SPAM': {},
+                'SPAM': {},
                 # 'UNSUBSTANTIAL': {},
                 # 'LIKELY_TO_REJECT': {}
             }
