@@ -1,0 +1,5 @@
+python-twitter==3.2.1
+requests
+configparser
+nltk
+flask
