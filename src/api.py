@@ -45,6 +45,8 @@ class PerspectiveAPI(object):
             }
         }
 
-        resp = requests.post(url=url, data=json.dumps(data))
-
-        return resp.json()
+        try:
+            resp = requests.post(url=url, data=json.dumps(data))
+            return resp.json()
+        except requests.RequestException as rex:
+            raise rex
