@@ -36,7 +36,7 @@ class PerspectiveAPI(object):
                 # 'ATTACK_ON_AUTHOR': {},
                 # 'ATTACK_ON_COMMENTER': {},
                 # 'INCOHERENT': {},
-                # 'INFLAMMATORY': {},
+                'INFLAMMATORY': {},
                 'OBSCENE': {},
                 # 'OFF_TOPIC': {},
                 'SPAM': {},
