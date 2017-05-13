@@ -13,6 +13,7 @@ class Evaluator(object):
         self.bot_rate = config.getfloat('RATES', 'bot_rate')
         self.user = None
         self.tline = None
+        self.tline_with_replies = None
 
     def evaluate(self, screen_name):
         try:
@@ -22,16 +23,25 @@ class Evaluator(object):
             return 404, {'error': {'message': ex.message}}
 
         try:
-            self.tline = self.api.GetUserTimeline(screen_name=screen_name)
+            self.tline = self.api.GetUserTimeline(screen_name=screen_name, exclude_replies=True)
+            self.tline_with_replies = self.api.GetUserTimeline(screen_name=screen_name)
+
+            if len(self.tline) == 0:
+                return 200, {
+                    'result': 'inactive'
+                }
         except Exception as ex:
             return 404, {'error': {'message': ex.message}}
 
         def get_tweet_props(prop):
             return [t.AsDict()[prop] for t in self.tline]
 
-        toxic_level = self.toxic_level(get_tweet_props('text'))
-        bot_level = self.bot_level()
-        inactivity_level = self.inactivity_level()
+        try:
+            toxic_level = self.toxic_level(get_tweet_props('text'))
+            bot_level = self.bot_level()
+            inactivity_level = self.inactivity_level()
+        except Exception as ex:
+            return 500, {'error': {'message': ex.message}}
 
         return 200, {
             'result': {
@@ -42,6 +52,10 @@ class Evaluator(object):
             }
         }
 
+    @staticmethod
+    def get_date(x):
+        return datetime.strptime(x['created_at'], '%a %b %d %H:%M:%S +0000 %Y')
+
     def toxic_level(self, msgs):
         def get_toxicity(msg):
             tx = self.perspective.get_toxicity(msg)
@@ -50,19 +64,28 @@ class Evaluator(object):
         return sum(get_toxicity(msg) for msg in msgs) / len(msgs)
 
     def bot_level(self):
-        # check how many same messages and hashtags used by account
-        return 1
+        # calculate retweet speed
+        rt_deltas = []
+        for t in self.tline:
+            tweet = t.AsDict()
+            if 'retweeted_status' in tweet:
+                rt_time = self.get_date(tweet['retweeted_status'])
+                t_time = self.get_date(tweet)
+                rt_deltas.append(abs((rt_time - t_time).seconds))
+
+        if len(rt_deltas) > 0:
+            avg_rt_deltas = sum(rt_deltas) / len(rt_deltas)
+            return avg_rt_deltas
+        else:
+            return 0
 
     def inactivity_level(self):
         # check the frequency of messages
         last_msg = self.tline[0].AsDict()
         first_msg = self.tline[-1].AsDict()
 
-        get_date = lambda x: datetime.strptime(x['created_at'],
-                                           '%a %b %d %H:%M:%S +0000 %Y')
-
-        last_tweet_date = get_date(last_msg)
-        first_tweet_date = get_date(first_msg)
+        last_tweet_date = self.get_date(last_msg)
+        first_tweet_date = self.get_date(first_msg)
         last_first_diff = abs((last_tweet_date - first_tweet_date).days)
         today_last_diff = abs((datetime.today() - last_tweet_date).days)
         active_time_avg = len(self.tline) / last_first_diff
@@ -70,4 +93,7 @@ class Evaluator(object):
         if active_time_avg > self.inactive_rate and today_last_diff < self.inactivity_tolerance:
             return {'inactive': False, 'tweets_per_day': active_time_avg}
         else:
-            return {'inactive': True, 'tweets_per_day': active_time_avg}
+            data = {'inactive': True, 'tweets_per_day': active_time_avg}
+            if today_last_diff > self.inactivity_tolerance:
+                data.update({'inactive_for_days': today_last_diff})
+            return data
