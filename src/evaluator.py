@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, time
+from datetime import datetime
 from src import get_config
 from .api import (Twit, PerspectiveAPI)
 
@@ -9,6 +9,7 @@ class Evaluator(object):
         self.perspective = PerspectiveAPI(root_path)
         config = get_config(root_path)
         self.inactive_rate = config.getfloat('RATES', 'inactive_rate')
+        self.inactivity_tolerance = config.getint('RATES', 'inactivity_tolerance')
         self.bot_rate = config.getfloat('RATES', 'bot_rate')
         self.user = None
         self.tline = None
@@ -63,10 +64,10 @@ class Evaluator(object):
         last_tweet_date = get_date(last_msg)
         first_tweet_date = get_date(first_msg)
         last_first_diff = abs((last_tweet_date - first_tweet_date).days)
+        today_last_diff = abs((datetime.today() - last_tweet_date).days)
         active_time_avg = len(self.tline) / last_first_diff
 
-        if active_time_avg > self.inactive_rate:
+        if active_time_avg > self.inactive_rate and today_last_diff < self.inactivity_tolerance:
             return {'inactive': False, 'tweets_per_day': active_time_avg}
         else:
-
-            return active_time_avg
+            return {'inactive': True, 'tweets_per_day': active_time_avg}
