@@ -31,7 +31,18 @@ class PerspectiveAPI(object):
         data = {
             'comment': {'text': text},
             'languages': ['en'],
-            'requestedAttributes': {'TOXICITY': {}}
+            'requestedAttributes': {
+                'TOXICITY': {},
+                # 'ATTACK_ON_AUTHOR': {},
+                # 'ATTACK_ON_COMMENTER': {},
+                # 'INCOHERENT': {},
+                # 'INFLAMMATORY': {},
+                # 'OBSCENE': {},
+                # 'OFF_TOPIC': {},
+                # 'SPAM': {},
+                # 'UNSUBSTANTIAL': {},
+                # 'LIKELY_TO_REJECT': {}
+            }
         }
 
         resp = requests.post(url=url, data=json.dumps(data))
