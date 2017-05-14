@@ -1,6 +1,6 @@
 from datetime import datetime
 from src import get_config
-from .api import (Twit, PerspectiveAPI)
+from src.api import (Twit, PerspectiveAPI)
 
 
 class Evaluator(object):
@@ -8,9 +8,9 @@ class Evaluator(object):
         self.api = Twit(root_path).get_api()
         self.perspective = PerspectiveAPI(root_path)
         config = get_config(root_path)
-        self.inactive_rate = config.getfloat('RATES', 'inactive_rate')
-        self.inactivity_tolerance = config.getint('RATES', 'inactivity_tolerance')
-        self.bot_rate = config.getfloat('RATES', 'bot_rate')
+        self.inactive_rate = config.getfloat('LIMITS', 'inactive_rate')
+        self.inactivity_tolerance = config.getint('LIMITS', 'inactivity_tolerance')
+        self.bot_rate = config.getfloat('LIMITS', 'bot_rate')
         self.user = None
         self.tline = None
 
