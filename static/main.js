@@ -65,6 +65,14 @@
                 var obscenity = $('.obscenity.circle');
 
                 var r = JSON.parse(data).result;
+                if (r === "inactive"){
+                    var alert = $(".error-alert");
+                    alert.html("this user is totally inactive");
+                    alert.fadeIn("slow");
+                    window.setTimeout(
+                        function() { alert.fadeOut("slow"); }, 5000
+                    );
+                }
                 toxicity.circleProgress({value: r.troll_level.TOXICITY});
                 spam.circleProgress({value: r.troll_level.SPAM});
                 inflammatory.circleProgress({value: r.troll_level.INFLAMMATORY});
