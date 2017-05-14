@@ -37,7 +37,8 @@ class Evaluator(object):
 
         try:
             msg_for_toxicity = " ".join(get_tweet_props('text'))
-            toxic_level = self.toxic_level(msg_for_toxicity[:2800])
+            msg = msg_for_toxicity.encode(encoding='utf-8')[:3000]
+            toxic_level = self.toxic_level(msg.decode(errors='ignore'))
             bot_level = self.bot_level()
             activity_level = self.activity_level()
         except Exception as ex:
