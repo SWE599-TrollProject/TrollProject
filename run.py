@@ -1,5 +1,5 @@
 import json
-from flask import (Flask, request, abort)
+from flask import (Flask, request, abort, render_template)
 from src.evaluator import Evaluator
 
 app = Flask('troll_tespit',
@@ -8,7 +8,7 @@ app = Flask('troll_tespit',
 
 @app.route('/', methods=['GET'])
 def index():
-    return 'Hello World!'
+    return render_template('index.html')
 
 
 @app.route('/search', methods=['POST'])

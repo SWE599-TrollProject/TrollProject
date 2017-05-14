@@ -39,14 +39,14 @@ class Evaluator(object):
             msg_for_toxicity = " ".join(get_tweet_props('text'))
             toxic_level = self.toxic_level(msg_for_toxicity[:2800])
             bot_level = self.bot_level()
-            inactivity_level = self.inactivity_level()
+            activity_level = self.activity_level()
         except Exception as ex:
             return 500, {'error': {'message': ex.message}}
 
         return 200, {
             'result': {
                 'bot_level': bot_level,
-                'inactive_level': inactivity_level,
+                'activity_level': activity_level,
                 'troll_level': toxic_level,
                 # 'account_basic': self.user.AsDict()
             }
@@ -102,7 +102,7 @@ class Evaluator(object):
             'shortest_t': shortest_t
         }
 
-    def inactivity_level(self):
+    def activity_level(self):
         # check the frequency of messages
         last_msg = self.tline[0]
         first_msg = self.tline[-1]
