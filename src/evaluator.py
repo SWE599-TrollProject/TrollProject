@@ -89,17 +89,28 @@ class Evaluator(object):
             grouped_td = list(set(sorted_td))
 
         is_bot_suspect = False
+        a, b = None, None
         if len(grouped_td) > 0:
             if 0.9 >= len(grouped_td) / len(sorted_td) >= 0.1:
+                a = len(grouped_td) / len(sorted_td)
                 is_bot_suspect = True
         if len(grouped_rtd) > 0:
             if 0.9 >= len(grouped_rtd) / len(sorted_rtd) >= 0.1:
+                b = len(grouped_rtd) / len(sorted_rtd)
                 is_bot_suspect = True
+        if a or b:
+            if a and b:
+                suspect_rate = (a + b) / 2
+            else:
+                suspect_rate = a or b
+        else:
+            suspect_rate = 0
 
         return {
             'is_bot_suspect': is_bot_suspect,
             'shortest_rt': shortest_rt,
-            'shortest_t': shortest_t
+            'shortest_t': shortest_t,
+            'suspect_rate': suspect_rate
         }
 
     def activity_level(self):

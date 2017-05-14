@@ -69,10 +69,11 @@
                 spam.circleProgress({value: r.troll_level.SPAM});
                 inflammatory.circleProgress({value: r.troll_level.INFLAMMATORY});
                 obscenity.circleProgress({value: r.troll_level.OBSCENE});
-                activity.circleProgress({value: r.activity_level.tweets_per_day / 100.0});
+                activity.circleProgress({value: r.activity_level.tweets_per_day});
+                bot.circleProgress({value: r.bot_level.suspect_rate});
             },
             error: function (err) {
-                console.log(err);
+                alert(err);
             }
         });
     })
