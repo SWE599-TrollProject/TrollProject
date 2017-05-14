@@ -88,7 +88,9 @@ RUN set -ex; \
 RUN mkdir /app
 WORKDIR /app
 
-RUN git clone SWE599-TrollProject/TrollProject /app/
+RUN https://github.com/SWE599-TrollProject/TrollProject.git
+WORKDIR /app/TrollProject
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
