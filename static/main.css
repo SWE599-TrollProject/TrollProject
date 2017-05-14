@@ -16,6 +16,11 @@ p{
     color:#fff;
 }
 
+.logo{
+    font-family: 'Lobster', cursive;
+    font-size: 64px;
+}
+
 .buscarArriba{
   border-radius: 105px;
 }
@@ -1001,4 +1006,16 @@ margin-top:53px;
     text-align: center;
     line-height: 40px;
     font-size: 30px;
+}
+
+.circle-out{
+    text-align: center;
+}
+
+.error-alert {
+    top: 50px;
+    position: absolute;
+    display: none;
+    z-index: 5;
+
 }

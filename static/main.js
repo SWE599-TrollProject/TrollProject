@@ -78,8 +78,14 @@
                 activity.circleProgress({value: show_activity_as});
                 bot.circleProgress({value: r.bot_level.suspect_rate});
             },
-            error: function (err) {
-                alert(err);
+            error: function (data) {
+                var alert = $(".error-alert");
+                var err = data.responseJSON.message[0];
+                alert.html(err.message);
+                alert.fadeIn("slow");
+                window.setTimeout(
+                    function() { alert.fadeOut("slow"); }, 5000
+                );
             }
         });
     })

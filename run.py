@@ -1,9 +1,30 @@
 import json
-from flask import (Flask, request, abort, render_template)
+from flask import (Flask, request, abort, jsonify, render_template)
 from src.evaluator import Evaluator
+
+
+class Err(Exception):
+    def __init__(self, message, status_code, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+
 
 app = Flask('troll_tespit',
             template_folder='templates', static_folder='static')
+
+@app.errorhandler(Err)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 @app.route('/', methods=['GET'])
@@ -18,7 +39,7 @@ def search():
         evaluator = Evaluator(app.root_path)
         status, result = evaluator.evaluate(screen_name)
         if status != 200:
-            return abort(status, result)
+            raise Err(result, status_code=status)
         return json.dumps(result)
     else:
         return False

@@ -19,7 +19,7 @@ class Evaluator(object):
             # check is user exists (or public)
             self.user = self.api.GetUser(screen_name=screen_name)
         except Exception as ex:
-            return 404, {'error': {'message': ex.message}}
+            return 404, ex.message
 
         try:
             self.tline = [t.AsDict() for t in self.api.GetUserTimeline(
@@ -30,7 +30,7 @@ class Evaluator(object):
                     'result': 'inactive'
                 }
         except Exception as ex:
-            return 404, {'error': {'message': ex.message}}
+            return 404, ex.message
 
         def get_tweet_props(prop):
             return [t[prop] for t in self.tline]
@@ -42,7 +42,7 @@ class Evaluator(object):
             bot_level = self.bot_level()
             activity_level = self.activity_level()
         except Exception as ex:
-            return 500, {'error': {'message': ex.message}}
+            return 500, ex.message
 
         return 200, {
             'result': {

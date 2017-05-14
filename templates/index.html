@@ -14,8 +14,8 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="/static/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/theme.min.css">
-  <link href="/static/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/bootstrap-theme.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
   <link rel="stylesheet" href="/static/main.css">
   <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.0/animate.min.css">
@@ -27,48 +27,24 @@
 <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-<div>
-  <nav class="navbar navbar-default navbar-fixed-top fondoTrans"
-       role="navigation">
-    <div style="padding: 0 20px 0 20px;">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle margenArriba"
-                data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-
-      </div>
-
-      <div class="collapse navbar-collapse">
-
-        <!--   -->
-      </div>
-    </div>
-    <!--/.
-nav-collapse -->
-
-  </nav>
-</div>
-
 
 <div class="container">
+  <div class="alert alert-danger alert-dismissible error-alert fade in" role="alert">
+  </div>
   <div class="row vertical-center-row" id="controlInicio">
     <div class="col-lg-12">
       <div class="row margenSubtitulo">
-        <h2 class="textoCentrado textoBlanco">Troll Finder</h2>
+        <h2 class="textoCentrado textoBlanco logo">Troll Finder</h2>
       </div>
       <div class="row margen_busca_home">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-6 col-md-offset-3" style="text-align: center;">
           <form action="/search"
                 class="form-inline" role="form" method="post" id="searchForm">
             <div class="input-group fondoFormHome">
               <div class="icon-addon addon-lg">
                 <input type="text" class="form-control input-lg"
                        id="screen_name" name="screen_name"
-                       placeholder="@suspicious user." required
+                       placeholder="suspicious user" required
                        autocomplete="off">
               </div>
               <span class="input-group-btn">
@@ -90,27 +66,27 @@ nav-collapse -->
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Bot suspect</p>
       <div class="bot circle"><strong></strong></div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Activity rate</p>
       <div class="activity circle"><strong></strong></div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Toxicity level</p>
       <div class="toxicity circle"><strong></strong></div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Spam level</p>
       <div class="spam circle"><strong></strong></div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Inflammatory level</p>
       <div class="inflammatory circle"><strong></strong></div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2 circle-out">
       <p>Obscenity level</p>
       <div class="obscenity circle"><strong></strong></div>
     </div>
