@@ -12,7 +12,7 @@
         value: 0,
         lineCap: 'round'
     }).on('circle-animation-progress', function (event, progress, stepValue) {
-        $(this).find('strong').text(stepValue.toFixed(2).substr(2));
+        $(this).find('strong').text(stepValue.toFixed(3));
     });
 
     $('.toxicity.circle').circleProgress({
