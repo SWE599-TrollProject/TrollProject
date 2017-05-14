@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Troll-Tespit</title>
+  <title>Troll-Finder</title>
 
   <meta name="viewport"
         content="width=device-width, initial-scale=1, user-scalable=no">
@@ -23,7 +23,7 @@
         href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.0/animate.min.css">
   <script src="/static/modernizr-2.6.2.min.js"></script>
   <script
-      src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
 <!--[if lt IE 7]>
@@ -56,24 +56,22 @@ nav-collapse -->
 </div>
 
 
-<div class="container-fluid containerHome">
+<div class="container">
   <div class="row vertical-center-row" id="controlInicio">
     <div class="col-lg-12">
       <div class="row margenSubtitulo">
-        <h2 class="textoCentrado textoBlanco">troll tespit</h2>
+        <h2 class="textoCentrado textoBlanco">Troll Finder</h2>
       </div>
       <div class="row margen_busca_home">
         <div class="col-md-6 col-md-offset-3">
-          <form action="https://www.trolldor.com/buscar_post"
-                class="form-inline" role="form" method="post" id="formBuscar">
+          <form action="/search"
+                class="form-inline" role="form" method="post" id="searchForm">
             <div class="input-group fondoFormHome">
               <div class="icon-addon addon-lg">
                 <input type="text" class="form-control input-lg"
-                       id="usuarioTwitter" name="usuarioTwitter"
+                       id="screen_name" name="screen_name"
                        placeholder="@suspicious user." required
                        autocomplete="off">
-                <label for="email" class="fa fa-twitter fa-2x" rel="tooltip"
-                       title="email"></label>
               </div>
               <span class="input-group-btn">
                 <button class="btn btn-info btn-lg" type="submit" id="btnHome">
@@ -88,12 +86,41 @@ nav-collapse -->
     </div>
   </div>
 </div>
-<div class="container-fluid-home">
-
+<div>
+  <br>
+  <hr>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <p>Bot suspect</p>
+      <div class="bot circle"><strong></strong></div>
+    </div>
+    <div class="col-md-2">
+      <p>Activity rate</p>
+      <div class="activity circle"><strong></strong></div>
+    </div>
+    <div class="col-md-2">
+      <p>Toxicity level</p>
+      <div class="toxicity circle"><strong></strong></div>
+    </div>
+    <div class="col-md-2">
+      <p>Spam level</p>
+      <div class="spam circle"><strong></strong></div>
+    </div>
+    <div class="col-md-2">
+      <p>Inflammatory level</p>
+      <div class="inflammatory circle"><strong></strong></div>
+    </div>
+    <div class="col-md-2">
+      <p>Obscenity level</p>
+      <div class="obscenity circle"><strong></strong></div>
+    </div>
+  </div>
 </div>
 
 <script src="/static/bootstrap.min.js"></script>
-<script src="/static/circle-progress.min.js"></script>
+<script src="/static/circle-progress.js"></script>
 <script src="/static/main.js"></script>
 </body>
 </html>

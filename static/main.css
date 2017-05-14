@@ -12,6 +12,10 @@ html, body{height:100%; margin:0;padding:0; }
     margin-top:-10px;
 }
 
+p{
+    color:#fff;
+}
+
 .buscarArriba{
   border-radius: 105px;
 }
@@ -382,7 +386,7 @@ font-size: 60px
    
 }
 .fondoFormHome{
-    background-color:rgba(0,0,0,0.5);
+ background-color:rgba(0,0,0,0.5);
     border-radius: 10px;
 }
 .fondoBotonMedio{
@@ -465,6 +469,8 @@ font-size: 60px
     /*height: 46px;*/
     font-size: 18px;
     padding: 10px 16px 10px 40px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 .icon-addon.addon-sm .form-control {
@@ -975,4 +981,24 @@ margin-top:53px;
 .btn-transparente{
   background-color: transparent;
   border-width: 0px;
+}
+
+.circle {
+    width: 100px;
+    margin: 6px 6px 20px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    line-height: 1.2;
+    color: #fff;
+}
+
+.circle strong {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 30px;
 }
