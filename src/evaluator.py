@@ -84,19 +84,26 @@ class Evaluator(object):
             shortest_rt = sorted_rtd[0]
             grouped_rtd = list(set(sorted_rtd))
 
+            l1 = [0.5, 0.5, 0.5, 0.6, 0.6, 0.7, 0.7, 0.7, 0.7]
+            l2 = [0.5, 0.6, 0.7]
+
+            gr = [0.5, 0.6, 0.7]
+
         if len(t_deltas) > 0:
             sorted_td = sorted(t_deltas)
-            shortest_t = sorted_td[-1]
+            shortest_t = sorted_td[0]
             grouped_td = list(set(sorted_td))
 
         is_bot_suspect = False
         a, b = None, None
         if len(grouped_td) > 0:
-            if 0.9 >= len(grouped_td) / len(sorted_td) >= 0.1:
+            bot_rate = len(grouped_td) / len(sorted_td)
+            if self.max_bot_rate >= bot_rate >= self.min_bot_rate:
                 a = len(grouped_td) / len(sorted_td)
                 is_bot_suspect = True
         if len(grouped_rtd) > 0:
-            if 0.9 >= len(grouped_rtd) / len(sorted_rtd) >= 0.1:
+            bot_rate = len(grouped_rtd) / len(sorted_rtd)
+            if self.max_bot_rate >= bot_rate >= self.min_bot_rate:
                 b = len(grouped_rtd) / len(sorted_rtd)
                 is_bot_suspect = True
         if a or b:
