@@ -10,7 +10,8 @@ class Evaluator(object):
         config = get_config(root_path)
         self.inactive_rate = config.getfloat('LIMITS', 'inactive_rate')
         self.inactivity_tolerance = config.getint('LIMITS', 'inactivity_tolerance')
-        self.bot_rate = config.getfloat('LIMITS', 'bot_rate')
+        self.min_bot_rate = config.getfloat('LIMITS', 'min_bot_rate')
+        self.max_bot_rate = config.getfloat('LIMITS', 'max_bot_rate')
         self.user = None
         self.tline = None
 
